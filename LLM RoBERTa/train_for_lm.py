@@ -12,13 +12,11 @@ def tokenize(batch):
 
 dataset = dataset.map(tokenize, batched=True)
 
-# Create training and validation datasets
 train_dataset = dataset['train']
 validation_dataset = dataset['validation']
 
-model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2)  # Adjust 'num_labels' based on your task
+model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2) 
 
-# Training arguments
 training_args = TrainingArguments(
     output_dir='./results',  
     num_train_epochs=3,  
