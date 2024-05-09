@@ -1,22 +1,25 @@
 from transformers import RobertaTokenizer, RobertaForSequenceClassification, Trainer, TrainingArguments
-from datasets import load_dataset
+from datasets import Dataset
+from datasets import load_from_disk
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-dataset = load_dataset("idkyet")
+# load the tokenised data
+dataset = load_from_disk('C:/Users/asuka/Desktop/capstone project/Language-Model/LLM_DATA')
 
+# split dataset into train and test
+split_dataset = dataset.train_test_split(test_size=0.2)
+train_dataset = split_dataset['train']
+validation_dataset = split_dataset['test']
+
+# tokeniser
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
-def tokenize(batch):
-    return tokenizer(batch['text'], padding=True, truncation=True)
 
-dataset = dataset.map(tokenize, batched=True)
+# load the model
+model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=len(set(dataset['label'])))
 
-train_dataset = dataset['train']
-validation_dataset = dataset['validation']
-
-model = RobertaForSequenceClassification.from_pretrained("roberta-base", num_labels=2) 
-
+# define the training arguments
 training_args = TrainingArguments(
     output_dir='./results',  
     num_train_epochs=3,  
@@ -29,6 +32,7 @@ training_args = TrainingArguments(
     learning_rate=5e-5,
 )
 
+# Define compute metrics function
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
     predictions = np.argmax(logits, axis=1)
@@ -43,7 +47,7 @@ def compute_metrics(eval_pred):
         'recall': recall
     }
 
-
+# initialize trainer
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -52,4 +56,9 @@ trainer = Trainer(
     compute_metrics=compute_metrics
 )
 
+# train the model
 trainer.train()
+
+# save the trained model
+model.save_pretrained('C:/Users/asuka/Desktop/capstone project/Language-Model/LLM_RoBERTa/trained_model')
+tokenizer.save_pretrained('C:/Users/asuka/Desktop/capstone project/Language-Model/LLM_RoBERTa/trained_model')
