@@ -4,7 +4,7 @@ import torch
 
 app = Flask(__name__)
 
-model_path = "C:/Users/SLHan/OneDrive/Desktop/Capstone/Language-Model/Language-Model/LLM_RoBERTa/trained_model"
+model_path = r'C:\Users\SLHan\OneDrive\Desktop\Capstone\Language-Model\Text-Recognition_ML\LLM_RoBERTa\trained_model'
 tokenizer = RobertaTokenizer.from_pretrained(model_path)
 model = RobertaForSequenceClassification.from_pretrained(model_path)
 model.eval() 
