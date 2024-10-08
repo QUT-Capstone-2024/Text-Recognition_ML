@@ -22,5 +22,6 @@ for each missing package and try again.
 
 
 
-pip install flask transformers torch torchvision torchaudio
+pip install flask transformers torch
+
 py app.py
