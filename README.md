@@ -16,3 +16,11 @@ Read the errors and do:
 pip install <package-name> 
 for each missing package and try again.
 
+
+
+
+
+
+
+pip install flask transformers torch torchvision torchaudio
+py app.py
